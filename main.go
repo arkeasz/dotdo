@@ -1,113 +1,65 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 	_ "github.com/mattn/go-sqlite3"
+	tea "github.com/charmbracelet/bubbletea"
+	"todo/pkg/handlers"
 )
 
-const dbFile = ".todo/database.db"
+type model struct {}
 
-func initDB() error {
-	dir := ".todo"
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		if err := os.Mkdir(dir, 0755); err != nil {
-			return fmt.Errorf("Failed to create directory %s: %v", dir, err)
-		}
-	}
+func initialModel(mode string) model {
 
-	db, err := sql.Open("sqlite3", dbFile)
-	if err != nil {
-		return fmt.Errorf("failed to open database: %v", err)
-	}
-	defer db.Close()
+}
 
-	query := `
-	CREATE TABLE IF NOT EXISTS tasks (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		title TEXT NOT NULL,
-		done BOOLEAN NOT NULL DEFAULT 0
-	);`
-
-	_, err = db.Exec(query)
-	if err != nil {
-		return fmt.Errorf("failed to create table: %v", err)
-	}
-
-	fmt.Println("✅ Database created successfully")
+func (m model) Init() tea.Cmd {
 	return nil
 }
 
+func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case: "ctrl+c"
+		}
+	}
+	return m, nil
+}
 
+func (m model) View() string {
+	return "Hello, world"
+}
 
-func main()  {
-
-	if len(os.Args) < 2 {
-		fmt.Println("❌ You should type a command\nUse: todo init")
-		return
+func main() {
+	f, err := tea.LogToFile("debug.log", "debug")
+	if err != nil {
+		log.Fatalf("err: %w", err)
 	}
 
-	command := strings.ToLower(os.Args[1])
+	defer f.Close()
 
-	switch command {
-	case "init":
-		if err := initDB(); err != nil {
-			log.Fatal("Error to initialized a database:\n", err)
-		}
-	case "start":
-		db, err := sql.Open("sqlite3", dbFile)
-		if err != nil {
-			log.Fatal("Failed to open database:", err)
-		}
-		defer db.Close()
+	p := tea.NewProgram(model )
 
-		query := `SELECT id, title, done FROM tasks;`
+	// if len(os.Args) < 2 {
+	// 	fmt.Println("❌ You should type a command\nUse: todo init")
+	// 	return
+	// }
 
-		rows, err := db.Query(query)
+	// command := strings.ToLower(os.Args[1])
 
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		defer rows.Close()
-
-		for rows.Next() {
-			var id int
-			var title string
-			var done bool
-
-			err = rows.Scan(&id, &title, &done)
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			fmt.Println(id, title, done)
-		}
-	case "create":
-		db, err := sql.Open("sqlite3", dbFile)
-		if err != nil {
-			log.Fatal("Failed to open database:", err)
-
-		}
-		defer db.Close()
-
-		tx, err := db.Begin()
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		query := `INSERT INTO tasks (title, done) VALUES ("GAA", 0)`
-
-		stmt, err := tx.Prepare(query)
-
-		defer stmt.Close()
-	default:
-		fmt.Println("❌ Command not found.\nUse: todo init")
-	}
-
+	// switch command {
+	// case "init":
+	// 	if err := handlers.InitDB(); err != nil {
+	// 		log.Fatal("Error to initialized a database:\n", err)
+	// 	}
+	// case "show":
+	// 	p := tea.NewProgram(initialModel("show"))
+	// 	if err := p.Run(); err != nil {
+	// 		fmt.Println("GAAAAAAAAAAAAAAA")
+	// 	}
+	// }
 }
