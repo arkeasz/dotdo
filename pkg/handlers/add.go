@@ -2,9 +2,8 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
-	"errors"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 func AddTask(task string) {
@@ -20,7 +19,7 @@ func AddTask(task string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// query := `INSERT INTO tasks (title, done) VALUES ("GAA", 0)`
+
 	query := `INSERT INTO tasks (title, done) VALUES (?, 0)`
 
 	stmt, err := tx.Prepare(query)

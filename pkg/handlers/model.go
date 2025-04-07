@@ -1,3 +1,4 @@
+package handlers
 
 type Task struct {
 	ID    int
