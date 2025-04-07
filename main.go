@@ -85,7 +85,7 @@ func initTUI() model {
 		Views:     views,
 		Frame:     frame,
 		TaskList:  l,
-		TaskInput: ti, 
+		TaskInput: ti,
 	}
 }
 
@@ -103,6 +103,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			m.Quitting = true
 			return m, tea.Quit
+		case "a":
+			if m.Frame == "list" {
+				m.Frame = "add"
+				m.TaskInput.SetValue("")
+				m.TaskInput.Focus()
+				return m, textinput.Blink
+			}
 		case "backspace":
 			if m.Frame == "list" {
 				if item, ok := m.TaskList.SelectedItem().(taskItem); ok {
@@ -125,14 +132,35 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		case "enter":
-			if m.Frame == "list" {
+			if m.Frame == "add" {
+				newLabel := m.TaskInput.Value()
+				if newLabel != "" {
+					handlers.AddTask(newLabel)
+					m.TaskList.SetItems(getTaskItems())
+					m.Frame = "list"
+					m.Selected = false
+					m.TaskInput.Blur()
+					return m, nil
+				}
+			}
 
+			if m.Frame == "list" {
+				if item, ok := m.TaskList.SelectedItem().(taskItem); ok {
+					item.Done = !item.Done
+					handlers.UpdateTask(item.ID, item.Label, item.Done)
+
+					items := m.TaskList.Items()
+					index := m.TaskList.Index()
+					items[index] = item
+					m.TaskList.SetItems(items)
+					return m, nil
+				}
 			}
 
 			if m.Frame == "edit" {
 				newLabel := m.TaskInput.Value()
 				if newLabel != "" {
-					handlers.UpdateTask(m.Choice.ID, newLabel)
+					handlers.UpdateTask(m.Choice.ID, newLabel, m.Choice.Done)
 					m.TaskList.SetItems(getTaskItems())
 				}
 				m.Frame = "list"
@@ -168,8 +196,12 @@ func (m model) View() string {
 	switch m.Frame {
 	case "list":
 		return "\n" + m.TaskList.View()
-	case "refresh":
-		return ""
+	case "add":
+		return fmt.Sprintf(
+			"Add Task:\n\n%s\n\n%s",
+			m.TaskInput.View(),
+			"(Enter to save, Esc to cancel)",
+		)
 	case "edit":
 		return fmt.Sprintf(
 			"Editing Task (ID %d):\n\n%s\n\n%s",

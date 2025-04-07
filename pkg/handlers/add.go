@@ -14,29 +14,9 @@ func AddTask(task string) {
 	}
 	defer db.Close()
 
-	tx, err := db.Begin()
+	_, err = db.Exec("INSERT INTO tasks (title, done) VALUES (?, 0)", task)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Failed to insert task:", err)
 	}
-
-	query := `INSERT INTO tasks (title, done) VALUES (?, 0)`
-
-	stmt, err := tx.Prepare(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-
 }
