@@ -15,7 +15,7 @@ func GetAllTasks() []Task {
 
 	tasks := []Task{}
 
-	query := `SELECT id, title, done FROM tasks;`
+	query := `SELECT id, title, done, type, description FROM tasks;`
 
 	rows, err := db.Query(query)
 
@@ -28,7 +28,7 @@ func GetAllTasks() []Task {
 	for rows.Next() {
 		var task Task
 
-		err = rows.Scan(&task.ID, &task.Title, &task.Done)
+		err = rows.Scan(&task.ID, &task.Title, &task.Done, &task.Typo, &task.Desc)
 
 		if err != nil {
 			log.Fatal(err)

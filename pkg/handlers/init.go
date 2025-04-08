@@ -26,8 +26,13 @@ func InitDB() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS tasks (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		title TEXT NOT NULL,
-		done BOOLEAN NOT NULL DEFAULT 0
+		title TEXT NOT NULL CHECK (LENGTH(title) > 0),
+		description TEXT DEFAULT '',
+		type TEXT NOT NULL DEFAULT 'todo',
+		done BOOLEAN NOT NULL DEFAULT 0,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		CHECK (type IN ('todo', 'feature', 'bug', 'refactor', 'documentation'))
 	);`
 
 	_, err = db.Exec(query)

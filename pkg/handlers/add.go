@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func AddTask(task string) {
+func AddTask(task string, desc string) {
 	db, err := sql.Open("sqlite3", dbFile)
 	if err != nil {
 		log.Fatal("Failed to open database:", err)
@@ -14,7 +14,7 @@ func AddTask(task string) {
 	}
 	defer db.Close()
 
-	_, err = db.Exec("INSERT INTO tasks (title, done) VALUES (?, 0)", task)
+	_, err = db.Exec("INSERT INTO tasks (title, done, description) VALUES (?, 0, ?)", task, desc)
 
 	if err != nil {
 		log.Fatal("Failed to insert task:", err)

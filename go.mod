@@ -1,12 +1,13 @@
-module todo
+module dotdo
 
-go 1.20
+go 1.23.0
 
 require (
 	github.com/charmbracelet/bubbles v0.20.0
 	github.com/charmbracelet/bubbletea v1.3.4
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/mattn/go-sqlite3 v1.14.27
+	github.com/olekukonko/ts v0.0.0-20171002115256-78ecb04241c0
 )
 
 require (
@@ -28,6 +29,6 @@ require (
 	github.com/sahilm/fuzzy v0.1.1 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	golang.org/x/sync v0.11.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/text v0.3.8 // indirect
 )
