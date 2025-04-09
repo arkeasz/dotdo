@@ -6,7 +6,13 @@ import (
 	"log"
 )
 
-func UpdateTask(id int, newTitle string, newDone bool, newDesc string) {
+func UpdateTask(
+	id int,
+	newTitle string,
+	newDone bool,
+	newDesc string,
+	newTypo string,
+) {
 	db, err := sql.Open("sqlite3", dbFile)
 	if err != nil {
 		log.Fatal("Failed to open database:", err)
@@ -14,5 +20,5 @@ func UpdateTask(id int, newTitle string, newDone bool, newDesc string) {
 	}
 	defer db.Close()
 
-	db.Exec("UPDATE tasks SET title = ?, done = ?, description = ? WHERE id = ?",  newTitle, newDone, newDesc,id)
+	db.Exec("UPDATE tasks SET title = ?, done = ?, description = ?, type = ? WHERE id = ?",  newTitle, newDone, newDesc, newTypo, id)
 }

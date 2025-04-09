@@ -76,6 +76,7 @@ type model struct {
 	Selected  bool
 	TaskInput textinput.Model
 	TaskDesc  textarea.Model
+	TabIdx    int
 }
 
 type TypoItem string
@@ -141,6 +142,7 @@ func Ran() model {
 	t.SetShowHelp(false)
 	t.SetShowPagination(false)
 	t.SetShowStatusBar(false)
+	t.DisableQuitKeybindings()
 	return model{
 		Views:     views,
 		Frame:     frame,
@@ -148,6 +150,7 @@ func Ran() model {
 		TaskInput: ti,
 		TaskDesc:  ta,
 		TypoList:  t,
+		TabIdx:    0,
 	}
 }
 

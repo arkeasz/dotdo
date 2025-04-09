@@ -7,6 +7,10 @@ import (
 )
 
 func AddTask(task string, desc string, typo string) {
+
+	if typo == "docs" {
+		typo = "documentation"
+	}
 	db, err := sql.Open("sqlite3", dbFile)
 	if err != nil {
 		log.Fatal("Failed to open database:", err)

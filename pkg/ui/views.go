@@ -23,10 +23,11 @@ func (m model) View() string {
 		)
     case "edit":
         sidePanel = sidePanelStyle.Render(
-            fmt.Sprintf("Editing Task (ID %d):\n\n%s\n\n%s\n\n%s",
+            fmt.Sprintf("Editing Task (ID %d):\n\n%s\n\n%s\n\n%s\n%s",
                 m.Choice.ID,
                 m.TaskInput.View(),
 				m.TaskDesc.View(),
+				m.TypoList.View(),
                 "(Enter for save, Esc to cancel)"),
         )
     default:
