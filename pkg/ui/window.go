@@ -87,10 +87,10 @@ func getTaskItems() []list.Item {
 	items := make([]list.Item, len(tasks))
 	for i, t := range tasks {
 		items[i] = taskItem{
-			ID:    t.ID,
+			ID:    t.ID,    // ID
 			Label: t.Title, // Title
-			Done:  t.Done,
-			Typo:  t.Typo,  //
+			Done:  t.Done,  // Done
+			Typo:  t.Typo,  // Typo
 			Desc:  t.Desc,  // Description
 		}
 	}
@@ -135,8 +135,12 @@ func Ran() model {
 
 	typoDelegate := list.NewDefaultDelegate()
 	typoDelegate.Styles.SelectedTitle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("212")).Bold(true)
-	t := list.New(typoItems, typoDelegate, totalHeight - 20, 10)
+
+	t := list.New(typoItems, typoDelegate, totalHeight - 10, 10)
 	t.Title = "Select a Typo"
+	t.SetShowHelp(false)
+	t.SetShowPagination(false)
+	t.SetShowStatusBar(false)
 	return model{
 		Views:     views,
 		Frame:     frame,

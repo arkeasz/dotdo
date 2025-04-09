@@ -70,7 +70,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					newDesc = "No description"
 				}
 				if newLabel != "" {
-					handlers.AddTask(newLabel, newDesc)
+					typoItem, _ := m.TypoList.SelectedItem().(TypoItem)
+					typo := string(typoItem)
+					handlers.AddTask(newLabel, newDesc, typo)
 					m.TaskList.SetItems(getTaskItems())
 					m.Frame = "list"
 					m.Selected = false
@@ -121,6 +123,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.TaskInput, cmd = m.TaskInput.Update(msg)
 		cmds = append(cmds, cmd)
 		m.TaskDesc, cmd = m.TaskDesc.Update(msg)
+		cmds = append(cmds, cmd)
+		m.TypoList, cmd = m.TypoList.Update(msg)
 		cmds = append(cmds, cmd)
 	}
 
